@@ -1,0 +1,1170 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>English Trainer — cute / happy / noisy / quiet / yesterday</title>
+<style>
+:root{ --bg1:#0ea5e9; --bg2:#22c55e; --accent:#8b5cf6; --ink:#0f172a; --cardA:#f0f9ff; --cardB:#eff6ff; --cardC:#ecfeff; --cardD:#f0fdf4; --frontBorder:#93c5fd; --backBorder:#a7f3d0; }
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans","DejaVu Sans",Arial;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  color:#0f172a;
+}
+.app{
+  width:100%;
+  max-width:1200px;
+  background:#fff;
+  border-radius:24px;
+  box-shadow:0 20px 50px rgba(0,0,0,.25);
+  overflow:hidden;
+}
+header{
+  padding:16px 20px;
+  background:linear-gradient(90deg,#f59e0b,var(--bg1));
+  color:#fff;
+}
+header h1{margin:0;font-size:22px}
+header p{margin:6px 0 0 0}
+main{padding:16px}
+.nav{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.nav .tab{
+  flex:1 1 180px;
+  text-align:center;
+  padding:12px 16px;
+  border:none;
+  border-radius:14px;
+  font-weight:900;
+  cursor:pointer;
+  background:#f1f5f9;
+  border:2px solid #e2e8f0;
+}
+.nav .tab.active{
+  background:var(--accent);
+  color:#fff;
+  border-color:transparent;
+  box-shadow:0 8px 16px rgba(139,92,246,.35);
+}
+.card{
+  background:#fff;
+  border:1px solid #e2e8f0;
+  border-radius:16px;
+  box-shadow:0 10px 20px rgba(0,0,0,.12);
+  padding:16px;
+}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.btn{
+  appearance:none;
+  border:none;
+  border-radius:12px;
+  padding:10px 14px;
+  font-weight:800;
+  cursor:pointer;
+}
+.btn.accent{
+  background:var(--accent);
+  color:#fff;
+  box-shadow:0 8px 16px rgba(139,92,246,.35);
+}
+.btn.ghost{background:#f1f5f9}
+.muted{color:#64748b}
+.pill{
+  display:inline-block;
+  background:#eef2ff;
+  color:#3730a3;
+  border-radius:999px;
+  padding:4px 10px;
+  font-weight:800;
+}
+.big{font-size:26px;font-weight:900}
+.center{display:flex;align-items:center;justify-content:center;text-align:center}
+.flip{position:relative;cursor:pointer;border-radius:18px;overflow:hidden}
+.flip-box{position:relative;width:100%;height:200px;perspective:1100px}
+.flip-inner{position:absolute;inset:0;transition:transform .6s;transform-style:prespective-3d;transform-style:preserve-3d}
+.flip.flipped .flip-inner{transform:rotateY(180deg)}
+.face{
+  position:absolute;
+  inset:0;
+  padding:14px;
+  border-radius:18px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  backface-visibility:hidden;
+}
+.face.front{
+  background:radial-gradient(120% 120% at 0% 0%, var(--cardA), var(--cardB));
+  border:2px solid var(--frontBorder);
+}
+.face.back{
+  transform:rotateY(180deg);
+  background:radial-gradient(120% 120% at 100% 100%, var(--cardC), var(--cardD));
+  border:2px solid var(--backBorder);
+}
+.face .tag{font-size:12px;font-weight:800;letter-spacing:.06em;padding:4px 8px;border-radius:999px;background:#ffffff80;margin-bottom:6px}
+.face .en{font-size:30px;font-weight:900;margin:6px 0;text-align:center}
+.face .ru{font-size:18px;color:#334155;text-align:center}
+.face .controls{display:flex;gap:8px;margin-top:8px}
+.spk{
+  border:2px solid #e2e8f0;
+  background:#f8fafc;
+  padding:6px 10px;
+  border-radius:10px;
+  font-weight:800;
+  cursor:pointer;
+}
+.badge{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  background:#e2e8f0;
+  border-radius:999px;
+  padding:6px 12px;
+  font-weight:700;
+  margin-bottom:8px;
+  flex-wrap:wrap;
+  justify-content:space-between;
+}
+.badge .left{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.badge .right{font-weight:900}
+.q{font-size:20px;font-weight:800}
+.mc{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:12px}
+.mc .btn{border:2px solid #e2e8f0;background:#fff}
+.mc .btn.correct{background:#dcfce7;border-color:#16a34a}
+.mc .btn.wrong{background:#fee2e2;border-color:#ef4444}
+.quizDone{
+  margin-top:14px;
+  border-top:1px dashed #e2e8f0;
+  padding-top:12px;
+  display:none;
+}
+.mistakeList{margin-top:8px}
+.mistakeList ul{margin:6px 0 0 18px}
+input[type=text]{
+  width:100%;
+  font-size:20px;
+  padding:12px;
+  border:2px solid #cbd5e1;
+  border-radius:12px;
+  outline:none;
+}
+input[type=text]:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(139,92,246,.15);
+}
+.ok{color:#16a34a;font-weight:800}
+.err{color:#ef4444;font-weight:800}
+.reveal{font-size:22px;font-weight:900;color:#16a34a;margin-top:6px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+footer{padding:10px 16px;color:#64748b}
+.stat{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.stat .chip{
+  background:#f1f5f9;
+  border:1px solid #e2e8f0;
+  border-radius:999px;
+  padding:6px 10px;
+  font-weight:800;
+}
+.tip{
+  background:#fffbeb;
+  border:1px solid #fde68a;
+  border-radius:12px;
+  padding:10px;
+  margin-top:8px;
+}
+.good{color:#16a34a}
+.sel{
+  border:2px solid #e2e8f0;
+  border-radius:10px;
+  padding:6px 10px;
+  font-weight:700;
+  background:#f8fafc;
+}
+.build-letters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+.build-letters .btn{
+  min-width:42px;
+  padding:8px 10px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Тренажёр для Пети — cute, happy, noisy, quiet, yesterday</h1>
+    <p>Карточки, две викторины, правописание, «Собери слово» и «Память» с озвучкой.</p>
+  </header>
+  <main>
+    <div class="nav">
+      <button class="tab active" data-tab="cards">Карточки</button>
+      <button class="tab" data-tab="quiz1">ENG→RUS</button>
+      <button class="tab" data-tab="quiz2">RUS→ENG</button>
+      <button class="tab" data-tab="spell">Правописание</button>
+      <button class="tab" data-tab="build">Собери слово</button>
+      <button class="tab" data-tab="type">Память</button>
+      <button class="tab" data-tab="result">Результат</button>
+    </div>
+
+    <!-- Cards -->
+    <section id="cards">
+      <div class="badge">
+        <div class="left">
+          <span class="pill">Раздел: Карточки</span><span class="pill" id="pCount">— слов</span>
+        </div>
+        <div class="right"></div>
+      </div>
+      <div class="grid" id="cardsGrid"></div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn accent" id="toQuiz1">Перейти к ENG→RUS →</button>
+      </div>
+    </section>
+
+    <!-- Quiz 1 ENG->RUS -->
+    <section id="quiz1" style="display:none">
+      <div class="card">
+        <div class="badge">
+          <div class="left">
+            <span class="pill">Викторина: ENG→RUS</span><span class="pill" id="pQ1">1/—</span>
+          </div>
+          <div class="right">⭐ <span id="starQ1">0</span>/<span id="totQ1">—</span></div>
+        </div>
+        <div class="q">Что значит: <span id="enQ1" class="big"></span>
+          <button id="speakQ1" class="btn ghost" title="Произнести">🔊</button>
+        </div>
+        <div class="mc" id="mcQ1"></div>
+        <div class="controls">
+          <button class="btn accent" id="nextQ1" disabled>Дальше →</button>
+          <button class="btn ghost" id="toQuiz2">Перейти к RUS→ENG</button>
+        </div>
+        <div class="quizDone" id="doneQ1">
+          <div class="stat">
+            <span class="chip" id="scoreQ1">ENG→RUS: —</span>
+            <span class="chip" id="starsQ1">⭐</span>
+          </div>
+          <div class="mistakeList">
+            <b id="mistTitleQ1">Слова с ошибками:</b>
+            <ul id="mistakesQ1"></ul>
+            <div class="controls">
+              <button class="btn accent" id="retryQ1">Сыграть ещё раз</button>
+              <button class="btn ghost" id="retryQ1wrong">Только ошибки</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz 2 RUS->ENG -->
+    <section id="quiz2" style="display:none">
+      <div class="card">
+        <div class="badge">
+          <div class="left">
+            <span class="pill">Викторина: RUS→ENG</span><span class="pill" id="pQ2">1/—</span>
+          </div>
+          <div class="right">⭐ <span id="starQ2">0</span>/<span id="totQ2">—</span></div>
+        </div>
+        <div class="q">Как будет по-английски: <span id="ruQ2" class="big"></span></div>
+        <div class="mc" id="mcQ2"></div>
+        <div class="controls">
+          <button class="btn accent" id="nextQ2" disabled>Дальше →</button>
+          <button class="btn ghost" id="toSpell">Перейти к Правописанию</button>
+        </div>
+        <div class="quizDone" id="doneQ2">
+          <div class="stat">
+            <span class="chip" id="scoreQ2">RUS→ENG: —</span>
+            <span class="chip" id="starsQ2">⭐</span>
+          </div>
+          <div class="mistakeList">
+            <b id="mistTitleQ2">Слова с ошибками:</b>
+            <ul id="mistakesQ2"></ul>
+            <div class="controls">
+              <button class="btn accent" id="retryQ2">Сыграть ещё раз</button>
+              <button class="btn ghost" id="retryQ2wrong">Только ошибки</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Spelling -->
+    <section id="spell" style="display:none">
+      <div class="card">
+        <div class="badge">
+          <div class="left">
+            <span class="pill">Раздел: Правописание</span><span class="pill" id="pSP">1/—</span>
+          </div>
+          <div class="right">⭐ <span id="starSP">0</span>/<span id="totSP">—</span></div>
+        </div>
+        <div class="q">Выберите правильное написание: <span id="ruSP" class="big"></span></div>
+        <div class="mc" id="mcSP"></div>
+        <div class="controls">
+          <button class="btn accent" id="nextSP" disabled>Дальше →</button>
+          <button class="btn ghost" id="toBuild">Перейти к «Собери слово»</button>
+        </div>
+        <div class="quizDone" id="doneSP">
+          <div class="stat">
+            <span class="chip" id="scoreSP">Правописание: —</span>
+            <span class="chip" id="starsSP">⭐</span>
+          </div>
+          <div class="mistakeList">
+            <b id="mistTitleSP">Слова с ошибками:</b>
+            <ul id="mistakesSP"></ul>
+            <div class="controls">
+              <button class="btn accent" id="retrySP">Сыграть ещё раз</button>
+              <button class="btn ghost" id="retrySPwrong">Только ошибки</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Build word -->
+    <section id="build" style="display:none">
+      <div class="card">
+        <div class="badge">
+          <div class="left">
+            <span class="pill">Раздел: Собери слово</span><span class="pill" id="pBL">1/—</span>
+          </div>
+          <div class="right">⭐ <span id="starBL">0</span>/<span id="totBL">—</span></div>
+        </div>
+        <div class="q">Соберите по буквам: <span id="ruBL" class="big"></span></div>
+        <div class="q" style="margin-top:8px">Ваш ответ: <span id="ansBL" class="big"></span></div>
+        <div id="fbBL" class="muted" style="margin-top:6px"></div>
+        <div class="reveal" id="revBL" style="display:none"></div>
+        <div class="build-letters" id="mcBL"></div>
+        <div class="controls">
+          <button class="btn ghost" id="backBL">⌫ Удалить букву</button>
+          <button class="btn ghost" id="clearBL">Очистить</button>
+          <button class="btn accent" id="checkBL" disabled>Проверить</button>
+          <button class="btn" id="nextBL" disabled>Дальше →</button>
+          <button class="btn ghost" id="toTypeFromBL">Перейти к Памяти</button>
+        </div>
+        <div class="quizDone" id="doneBL">
+          <div class="stat">
+            <span class="chip" id="scoreBL">Собери слово: —</span>
+            <span class="chip" id="starsBL">⭐</span>
+          </div>
+          <div class="mistakeList">
+            <b id="mistTitleBL">Слова с ошибками:</b>
+            <ul id="mistakesBL"></ul>
+            <div class="controls">
+              <button class="btn accent" id="retryBL">Сыграть ещё раз</button>
+              <button class="btn ghost" id="retryBLwrong">Только ошибки</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Typing / Memory -->
+    <section id="type" style="display:none">
+      <div class="card">
+        <div class="badge">
+          <div class="left">
+            <span class="pill">Раздел: Память (ввод)</span><span class="pill" id="pType">1/—</span>
+            <label class="pill">Повтор подряд:
+              <select id="repeatSel" class="sel">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
+            </label>
+          </div>
+          <div class="right">⭐ <span id="starTYPE">0</span>/<span id="totTYPE">—</span></div>
+        </div>
+        <div class="q" id="typePrompt">Введите по-английски: <span id="ruType" class="big"></span>
+          <button class="btn ghost" id="speakHint" title="Подсказка: произнести слово">🔊</button>
+        </div>
+        <input type="text" id="ansType"
+          placeholder="Напишите слово (пример: cute)"
+          autocapitalize="off" autocorrect="off" spellcheck="false">
+        <div id="fbType" class="muted" style="margin-top:6px"></div>
+        <div class="reveal" id="revType" style="display:none"></div>
+        <div class="controls">
+          <button class="btn ghost" id="skipType">Пропустить</button>
+          <button class="btn accent" id="checkType">Проверить (Enter)</button>
+          <button class="btn" id="nextType" disabled>Дальше →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Result -->
+    <section id="result" style="display:none">
+      <div class="card">
+        <h2 style="margin-top:0">Отлично поработали! 🎉</h2>
+        <div class="stat">
+          <span class="chip" id="cQ1">ENG→RUS: —</span>
+          <span class="chip" id="cQ2">RUS→ENG: —</span>
+          <span class="chip" id="cSP">Правописание: —</span>
+          <span class="chip" id="cBL">Собери слово: —</span>
+          <span class="chip" id="cType">Память: —</span>
+          <span class="chip good" id="cStars">⭐</span>
+        </div>
+        <div class="tip">Совет: проговорите вслух все слова по карточкам ещё раз.</div>
+        <p id="sum" class="muted" style="margin-top:8px"></p>
+        <div class="mistakeList">
+          <b id="mistTitleTYPE">Слова с ошибками:</b>
+          <ul id="mistakesTYPE"></ul>
+          <div class="controls">
+            <button class="btn accent" id="again">Сыграть всё заново</button>
+            <button class="btn ghost" id="againTypeWrong">Память: только ошибки</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="center">В карточках: клик = переворот + произношение. В викторинах: второй клик по правильному ответу — переход к следующему.</footer>
+</div>
+
+<script>
+// ===== Данные =====
+const DATA = [
+  {en:"cute",      ru:"милый",          pos:"Прилагательное"},
+  {en:"happy",     ru:"счастливый",     pos:"Прилагательное"},
+  {en:"noisy",     ru:"шумный",         pos:"Прилагательное"},
+  {en:"quiet",     ru:"тихий",          pos:"Прилагательное"},
+  {en:"yesterday", ru:"вчера",          pos:"Наречие"}
+];
+
+const SPELL_DIST = {
+  "cute":      ["cuet","qute","cut"],
+  "happy":     ["hapy","happpy","happi"],
+  "noisy":     ["noizy","nosy","noisey"],
+  "quiet":     ["quiat","quiett","qiet"],
+  "yesterday": ["yestarday","yesturday","yestreday"]
+};
+
+// ===== Навигация =====
+const tabs = document.querySelectorAll('.nav .tab');
+const sections = {
+  cards:document.getElementById('cards'),
+  quiz1:document.getElementById('quiz1'),
+  quiz2:document.getElementById('quiz2'),
+  spell:document.getElementById('spell'),
+  build:document.getElementById('build'),
+  type:document.getElementById('type'),
+  result:document.getElementById('result')
+};
+function showTab(name){
+  tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===name));
+  for(const k in sections){ sections[k].style.display=(k===name?'block':'none'); }
+  if(name==='quiz1' && !QUIZ1.started){ QUIZ1.start(); }
+  if(name==='quiz2' && !QUIZ2.started){ QUIZ2.start(); }
+  if(name==='spell' && !SPELL.started){ SPELL.start(); }
+  if(name==='build' && !BUILD.started){ BUILD.start(); }
+  if(name==='type'  && !TYPE.started ){ TYPE.start();  }
+}
+tabs.forEach(t=>t.addEventListener('click', ()=> showTab(t.dataset.tab)));
+
+// ===== Озвучка (EN) =====
+const hasSpeech = ('speechSynthesis' in window) && ('SpeechSynthesisUtterance' in window);
+let voiceEn = null;
+
+function pickVoices(){
+  if(!hasSpeech) return;
+  const vs = speechSynthesis.getVoices ? speechSynthesis.getVoices() : [];
+  voiceEn = vs.find(v =>
+    v && (
+      (v.lang && /^en(-|_)?/i.test(v.lang)) ||
+      /English/i.test(v.name)
+    )
+  ) || null;
+}
+if(hasSpeech){
+  speechSynthesis.onvoiceschanged = pickVoices;
+  pickVoices();
+}
+
+function speak(text){
+  if(!hasSpeech) return;
+  try{
+    const u = new SpeechSynthesisUtterance(text);
+    if(voiceEn) u.voice = voiceEn;
+    u.lang = (voiceEn && voiceEn.lang) ? voiceEn.lang : 'en-US';
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+// ===== Звуки =====
+let actx=null;
+function ctx(){if(!actx){actx=new (window.AudioContext||window.webkitAudioContext)();}return actx;}
+function tone(freq=880,dur=180,type='sine',vol=0.22){
+  try{
+    const ac=ctx(),o=ac.createOscillator(),g=ac.createGain();
+    o.type=type;o.frequency.value=freq;g.gain.value=vol;
+    o.connect(g).connect(ac.destination);o.start();
+    g.gain.exponentialRampToValueAtTime(0.0001,ac.currentTime+dur/1000);
+    o.stop(ac.currentTime+dur/1000);
+  }catch(e){}
+}
+function ok(){tone(1046,170,'triangle',0.26);setTimeout(()=>tone(1318,140,'triangle',0.24),110);}
+function bad(){tone(220,220,'sawtooth',0.28);}
+
+// ===== Utils =====
+function shuffle(a){ return a.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]); }
+function eqCaseInsensitive(a,b){ return (a??"").trim().toLowerCase() === (b??"").trim().toLowerCase(); }
+function uniq(arr,key){ const s=new Set(); const out=[]; for(const x of arr){ const k=key(x); if(!s.has(k)){ s.add(k); out.push(x);} } return out; }
+
+// ===== Cards =====
+const cardsGrid = document.getElementById('cardsGrid');
+const pCount = document.getElementById('pCount');
+pCount.textContent = DATA.length + " слов";
+
+function renderCards(){
+  cardsGrid.innerHTML = "";
+  DATA.forEach((w) => {
+    const wrap = document.createElement('div');
+    wrap.className = "flip";
+    wrap.innerHTML = `
+      <div class="flip-box">
+        <div class="flip-inner">
+          <div class="face front">
+            <div class="tag">${w.pos}</div>
+            <div class="en">${w.en}</div>
+            <div class="controls"><button class="spk">🔊 Произнести</button></div>
+          </div>
+          <div class="face back">
+            <div class="tag">Перевод</div>
+            <div class="ru big">${w.ru}</div>
+          </div>
+        </div>
+      </div>`;
+    wrap.addEventListener('click', ()=>{ wrap.classList.toggle('flipped'); speak(w.en); });
+    const speakBtn = wrap.querySelector('.spk');
+    speakBtn.addEventListener('click', (e)=>{ e.stopPropagation(); speak(w.en); });
+    cardsGrid.appendChild(wrap);
+  });
+}
+renderCards();
+document.getElementById('toQuiz1').addEventListener('click', ()=> showTab('quiz1'));
+
+// ===== Quiz 1 (ENG->RUS) =====
+const pQ1 = document.getElementById('pQ1');
+const enQ1 = document.getElementById('enQ1');
+const mcQ1 = document.getElementById('mcQ1');
+const nextQ1 = document.getElementById('nextQ1');
+const doneQ1 = document.getElementById('doneQ1');
+const scoreQ1 = document.getElementById('scoreQ1');
+const starsQ1 = document.getElementById('starsQ1');
+const starQ1 = document.getElementById('starQ1');
+const totQ1  = document.getElementById('totQ1');
+const speakQ1 = document.getElementById('speakQ1');
+const toQuiz2 = document.getElementById('toQuiz2');
+const mistakesQ1 = document.getElementById('mistakesQ1');
+const mistTitleQ1 = document.getElementById('mistTitleQ1');
+const retryQ1 = document.getElementById('retryQ1');
+const retryQ1wrong = document.getElementById('retryQ1wrong');
+
+const QUIZ1 = {
+  started:false, order:[], i:0, right:0, mistakes:[],
+  start(data=DATA){
+    this.started=true;
+    this.order = shuffle(data.slice());
+    this.i=0; this.right=0; this.mistakes=[];
+    doneQ1.style.display='none';
+    totQ1.textContent = this.order.length;
+    starQ1.textContent = this.right;
+    this.render();
+  },
+  render(){
+    nextQ1.disabled = true;
+    const cur = this.order[this.i];
+    pQ1.textContent = `${this.i+1}/${this.order.length}`;
+    enQ1.textContent = cur.en;
+    speakQ1.onclick = ()=> speak(cur.en);
+    const others = shuffle(DATA.filter(x=>x.ru!==cur.ru)).slice(0,3);
+    const opts = shuffle([cur, ...others]);
+    mcQ1.innerHTML = "";
+    let answered = false, correctBtn = null;
+    opts.forEach((o)=>{
+      const b = document.createElement('button');
+      b.className = "btn";
+      b.textContent = o.ru;
+      b.addEventListener('click', ()=>{
+        if(!answered){
+          if(o.ru===cur.ru){
+            speak(cur.en);
+            b.classList.add('correct'); correctBtn=b;
+            this.right++; starQ1.textContent=this.right;
+            nextQ1.disabled=false; answered=true;
+            setTimeout(()=>ok(), 250);
+            b.addEventListener('click', ()=>{ if(!nextQ1.disabled) QUIZ1.next(); }, {once:true});
+          }else{
+            b.classList.add('wrong');
+            bad();
+            Array.from(mcQ1.children).forEach(btn=>{ if(btn.textContent===cur.ru){ btn.classList.add('correct'); correctBtn=b; } });
+            speak(cur.en);
+            this.mistakes.push(cur);
+            nextQ1.disabled=false; answered=true;
+            if(correctBtn){
+              correctBtn.addEventListener('click', ()=>{ if(!nextQ1.disabled) QUIZ1.next(); }, {once:true});
+            }
+          }
+        }
+      });
+      mcQ1.appendChild(b);
+    });
+  },
+  next(){
+    this.i++;
+    if(this.i<this.order.length){ this.render(); }
+    else{
+      scoreQ1.textContent = `ENG→RUS: ${this.right}/${this.order.length}`;
+      const acc = this.right/this.order.length;
+      starsQ1.textContent = acc>0.95? "⭐⭐⭐⭐⭐" :
+                            acc>0.8 ? "⭐⭐⭐⭐"  :
+                            acc>0.6 ? "⭐⭐⭐"   :
+                            acc>0.4 ? "⭐⭐"    : "⭐";
+      const uniqM = uniq(this.mistakes, x=>x.en);
+      mistakesQ1.innerHTML = uniqM.length
+        ? uniqM.map(w=>`<li>${w.en} — ${w.ru}</li>`).join("")
+        : "<li>Ошибок не было 🎉</li>";
+      mistTitleQ1.textContent = `Слова с ошибками ${uniqM.length}/${this.order.length}:`;
+      doneQ1.style.display='block';
+      retryQ1.onclick = ()=> QUIZ1.start(DATA);
+      retryQ1wrong.onclick = ()=>{ if(uniqM.length){ QUIZ1.start(uniqM); } };
+    }
+  }
+};
+nextQ1.addEventListener('click', ()=> QUIZ1.next());
+toQuiz2.addEventListener('click', ()=> showTab('quiz2'));
+
+// ===== Quiz 2 (RUS->ENG) =====
+const pQ2 = document.getElementById('pQ2');
+const ruQ2 = document.getElementById('ruQ2');
+const mcQ2 = document.getElementById('mcQ2');
+const nextQ2 = document.getElementById('nextQ2');
+const doneQ2 = document.getElementById('doneQ2');
+const scoreQ2 = document.getElementById('scoreQ2');
+const starsQ2 = document.getElementById('starsQ2');
+const starQ2 = document.getElementById('starQ2');
+const totQ2  = document.getElementById('totQ2');
+const toSpell = document.getElementById('toSpell');
+const mistakesQ2 = document.getElementById('mistakesQ2');
+const mistTitleQ2 = document.getElementById('mistTitleQ2');
+const retryQ2 = document.getElementById('retryQ2');
+const retryQ2wrong = document.getElementById('retryQ2wrong');
+
+const QUIZ2 = {
+  started:false, order:[], i:0, right:0, mistakes:[],
+  start(data=DATA){
+    this.started=true;
+    this.order = shuffle(data.slice());
+    this.i=0; this.right=0; this.mistakes=[];
+    doneQ2.style.display='none';
+    totQ2.textContent=this.order.length;
+    starQ2.textContent=this.right;
+    this.render();
+  },
+  render(){
+    nextQ2.disabled = true;
+    const cur = this.order[this.i];
+    pQ2.textContent = `${this.i+1}/${this.order.length}`;
+    ruQ2.textContent = cur.ru;
+    const others = shuffle(DATA.filter(x=>x.en!==cur.en)).slice(0,3);
+    const opts = shuffle([cur, ...others]);
+    mcQ2.innerHTML = "";
+    let answered = false, correctBtn = null;
+    opts.forEach((o)=>{
+      const b = document.createElement('button');
+      b.className = "btn";
+      b.textContent = o.en;
+      b.addEventListener('click', ()=>{
+        if(!answered){
+          if(o.en===cur.en){
+            speak(cur.en);
+            b.classList.add('correct'); correctBtn=b;
+            this.right++; starQ2.textContent=this.right;
+            nextQ2.disabled=false; answered=true;
+            setTimeout(()=>ok(), 250);
+            b.addEventListener('click', ()=>{ if(!nextQ2.disabled) QUIZ2.next(); }, {once:true});
+          }else{
+            b.classList.add('wrong');
+            bad();
+            Array.from(mcQ2.children).forEach(btn=>{ if(btn.textContent===cur.en){ btn.classList.add('correct'); correctBtn=b; } });
+            speak(cur.en);
+            this.mistakes.push(cur);
+            nextQ2.disabled=false; answered=true;
+            if(correctBtn){
+              correctBtn.addEventListener('click', ()=>{ if(!nextQ2.disabled) QUIZ2.next(); }, {once:true});
+            }
+          }
+        }
+      });
+      mcQ2.appendChild(b);
+    });
+  },
+  next(){
+    this.i++;
+    if(this.i<this.order.length){ this.render(); }
+    else{
+      scoreQ2.textContent = `RUS→ENG: ${this.right}/${this.order.length}`;
+      const acc = this.right/this.order.length;
+      starsQ2.textContent = acc>0.95? "⭐⭐⭐⭐⭐" :
+                            acc>0.8 ? "⭐⭐⭐⭐"  :
+                            acc>0.6 ? "⭐⭐⭐"   :
+                            acc>0.4 ? "⭐⭐"    : "⭐";
+      const uniqM = uniq(this.mistakes, x=>x.en);
+      mistakesQ2.innerHTML = uniqM.length
+        ? uniqM.map(w=>`<li>${w.en} — ${w.ru}</li>`).join("")
+        : "<li>Ошибок не было 🎉</li>";
+      mistTitleQ2.textContent = `Слова с ошибками ${uniqM.length}/${this.order.length}:`;
+      doneQ2.style.display='block';
+      retryQ2.onclick = ()=> QUIZ2.start(DATA);
+      retryQ2wrong.onclick = ()=>{ if(uniqM.length){ QUIZ2.start(uniqM); } };
+    }
+  }
+};
+nextQ2.addEventListener('click', ()=> QUIZ2.next());
+toSpell.addEventListener('click', ()=> showTab('spell'));
+
+// ===== Spelling =====
+const pSP = document.getElementById('pSP');
+const ruSP = document.getElementById('ruSP');
+const mcSP = document.getElementById('mcSP');
+const nextSP = document.getElementById('nextSP');
+const doneSP = document.getElementById('doneSP');
+const scoreSP = document.getElementById('scoreSP');
+const starsSP = document.getElementById('starsSP');
+const starSP = document.getElementById('starSP');
+const totSP  = document.getElementById('totSP');
+const toBuild = document.getElementById('toBuild');
+const mistakesSP = document.getElementById('mistakesSP');
+const mistTitleSP = document.getElementById('mistTitleSP');
+const retrySP = document.getElementById('retrySP');
+const retrySPwrong = document.getElementById('retrySPwrong');
+
+const SPELL = {
+  started:false, order:[], i:0, right:0, mistakes:[],
+  start(data=DATA){
+    this.started=true;
+    this.order = shuffle(data.slice());
+    this.i=0; this.right=0; this.mistakes=[];
+    doneSP.style.display='none';
+    totSP.textContent=this.order.length;
+    starSP.textContent=this.right;
+    this.render();
+  },
+  render(){
+    nextSP.disabled = true;
+    const cur = this.order[this.i];
+    pSP.textContent = `${this.i+1}/${this.order.length}`;
+    ruSP.textContent = cur.ru;
+    const wrongs = (SPELL_DIST[cur.en] || []).slice(0,3);
+    const opts = shuffle([cur.en, ...wrongs]);
+    mcSP.innerHTML = "";
+    let answered=false, correctBtn=null;
+    opts.forEach((txt)=>{
+      const b = document.createElement('button');
+      b.className = "btn";
+      b.textContent = txt;
+      b.addEventListener('click', ()=>{
+        if(!answered){
+          if(txt===cur.en){
+            speak(cur.en);
+            b.classList.add('correct'); correctBtn=b;
+            this.right++; starSP.textContent=this.right;
+            nextSP.disabled=false; answered=true;
+            setTimeout(()=>ok(), 250);
+            b.addEventListener('click', ()=>{ if(!nextSP.disabled) SPELL.next(); }, {once:true});
+          }else{
+            b.classList.add('wrong');
+            bad();
+            Array.from(mcSP.children).forEach(btn=>{ if(btn.textContent===cur.en){ btn.classList.add('correct'); correctBtn=btn; } });
+            speak(cur.en);
+            this.mistakes.push(cur);
+            nextSP.disabled=false; answered=true;
+            if(correctBtn){
+              correctBtn.addEventListener('click', ()=>{ if(!nextSP.disabled) SPELL.next(); }, {once:true});
+            }
+          }
+        }
+      });
+      mcSP.appendChild(b);
+    });
+  },
+  next(){
+    this.i++;
+    if(this.i<this.order.length){ this.render(); }
+    else{
+      scoreSP.textContent = `Правописание: ${this.right}/${this.order.length}`;
+      const acc = this.right/this.order.length;
+      starsSP.textContent = acc>0.95? "⭐⭐⭐⭐⭐" :
+                            acc>0.8 ? "⭐⭐⭐⭐"  :
+                            acc>0.6 ? "⭐⭐⭐"   :
+                            acc>0.4 ? "⭐⭐"    : "⭐";
+      const uniqM = uniq(this.mistakes, x=>x.en);
+      mistakesSP.innerHTML = uniqM.length
+        ? uniqM.map(w=>`<li>${w.en} — ${w.ru}</li>`).join("")
+        : "<li>Ошибок не было 🎉</li>";
+      mistTitleSP.textContent = `Слова с ошибками ${uniqM.length}/${this.order.length}:`;
+      doneSP.style.display='block';
+      retrySP.onclick = ()=> SPELL.start(DATA);
+      retrySPwrong.onclick = ()=>{ if(uniqM.length){ SPELL.start(uniqM); } };
+    }
+  }
+};
+nextSP.addEventListener('click', ()=> SPELL.next());
+toBuild.addEventListener('click', ()=> showTab('build'));
+
+// ===== Build word =====
+const pBL = document.getElementById('pBL');
+const ruBL = document.getElementById('ruBL');
+const mcBL = document.getElementById('mcBL');
+const ansBL = document.getElementById('ansBL');
+const fbBL = document.getElementById('fbBL');
+const revBL = document.getElementById('revBL');
+const nextBL = document.getElementById('nextBL');
+const backBL = document.getElementById('backBL');
+const clearBL = document.getElementById('clearBL');
+const checkBL = document.getElementById('checkBL');
+const doneBL = document.getElementById('doneBL');
+const scoreBL = document.getElementById('scoreBL');
+const starsBL = document.getElementById('starsBL');
+const starBL = document.getElementById('starBL');
+const totBL  = document.getElementById('totBL');
+const toTypeFromBL = document.getElementById('toTypeFromBL');
+const mistakesBL = document.getElementById('mistakesBL');
+const mistTitleBL = document.getElementById('mistTitleBL');
+const retryBL = document.getElementById('retryBL');
+const retryBLwrong = document.getElementById('retryBLwrong');
+
+const BUILD = {
+  started:false,
+  order:[],
+  i:0,
+  right:0,
+  mistakes:[],
+  currentLetters:"",
+  clickStack:[],
+
+  start(data=DATA){
+    this.started=true;
+    this.order=shuffle(data.slice());
+    this.i=0;
+    this.right=0;
+    this.mistakes=[];
+    doneBL.style.display='none';
+    starBL.textContent=this.right;
+    totBL.textContent=this.order.length;
+    this.render();
+  },
+
+  render(){
+    nextBL.disabled=true;
+    checkBL.disabled=true;
+    this.currentLetters="";
+    this.clickStack=[];
+    ansBL.textContent="";
+    fbBL.textContent="Кликайте по буквам, чтобы собрать слово.";
+    revBL.style.display='none';
+    mcBL.innerHTML="";
+
+    if(this.i>=this.order.length){
+      scoreBL.textContent = `Собери слово: ${this.right}/${this.order.length}`;
+      const acc = this.right/this.order.length;
+      starsBL.textContent = acc>0.95? "⭐⭐⭐⭐⭐" :
+                            acc>0.8 ? "⭐⭐⭐⭐"  :
+                            acc>0.6 ? "⭐⭐⭐"   :
+                            acc>0.4 ? "⭐⭐"    : "⭐";
+      const uniqM = uniq(this.mistakes,x=>x.en);
+      mistakesBL.innerHTML = uniqM.length
+        ? uniqM.map(w=>`<li>${w.en} — ${w.ru}</li>`).join("")
+        : "<li>Ошибок не было 🎉</li>";
+      mistTitleBL.textContent = `Слова с ошибками ${uniqM.length}/${this.order.length}:`;
+      doneBL.style.display='block';
+      retryBL.onclick = ()=> BUILD.start(DATA);
+      retryBLwrong.onclick = ()=>{ if(uniqM.length){ BUILD.start(uniqM); } };
+      return;
+    }
+
+    const cur = this.order[this.i];
+    pBL.textContent = `${this.i+1}/${this.order.length}`;
+    ruBL.textContent = cur.ru;
+
+    // буквы слова — в алфавитном порядке
+    const letters = cur.en.split("").sort((a,b)=>a.localeCompare(b));
+
+    letters.forEach(ch=>{
+      const b=document.createElement('button');
+      b.className="btn";
+      b.textContent=ch;
+      b.addEventListener('click',()=>{
+        // произнести букву
+        speak(ch);
+
+        // добавить букву к ответу
+        BUILD.currentLetters += ch;
+        ansBL.textContent = BUILD.currentLetters;
+
+        // убрать кнопку
+        BUILD.clickStack.push(b);
+        b.disabled = true;
+        b.style.visibility = 'hidden';
+
+        fbBL.textContent = BUILD.currentLetters.length >= cur.en.length
+          ? "Нажмите «Проверить»."
+          : "Продолжайте собирать слово.";
+
+        checkBL.disabled = (BUILD.currentLetters.length===0);
+      });
+      mcBL.appendChild(b);
+    });
+  },
+
+  check(){
+    const cur = this.order[this.i];
+    const user = this.currentLetters;
+    if(!user) return;
+
+    if(eqCaseInsensitive(user,cur.en)){
+      speak(cur.en);
+      fbBL.innerHTML = '<span class="ok">Верно!</span>';
+      revBL.style.display='block';
+      revBL.textContent = cur.en;
+      this.right++;
+      starBL.textContent=this.right;
+      setTimeout(()=>ok(),250);
+      nextBL.disabled=false;
+      checkBL.disabled=true;
+    }else{
+      bad();
+      this.mistakes.push(cur);
+      fbBL.innerHTML = '<span class="err">Ошибка.</span>';
+      revBL.style.display='block';
+      revBL.textContent = "Правильно: "+cur.en;
+      setTimeout(()=>speak(cur.en),150);
+      nextBL.disabled=false;
+      checkBL.disabled=true;
+    }
+  },
+
+  next(){
+    this.i++;
+    this.render();
+  }
+};
+
+checkBL.addEventListener('click', ()=>BUILD.check());
+nextBL.addEventListener('click', ()=>BUILD.next());
+
+// Backspace
+backBL.addEventListener('click', ()=>{
+  if(!BUILD.currentLetters) return;
+  BUILD.currentLetters = BUILD.currentLetters.slice(0,-1);
+  ansBL.textContent = BUILD.currentLetters;
+
+  const btn = BUILD.clickStack.pop();
+  if(btn){
+    btn.disabled = false;
+    btn.style.visibility = '';
+  }
+
+  fbBL.textContent = BUILD.currentLetters
+    ? "Продолжайте собирать слово."
+    : "Кликайте по буквам, чтобы собрать слово.";
+  checkBL.disabled = (BUILD.currentLetters.length===0);
+});
+
+// Clear
+clearBL.addEventListener('click', ()=>{
+  BUILD.currentLetters="";
+  ansBL.textContent="";
+  fbBL.textContent="Кликайте по буквам, чтобы собрать слово.";
+  checkBL.disabled=true;
+  while(BUILD.clickStack.length){
+    const btn = BUILD.clickStack.pop();
+    btn.disabled = false;
+    btn.style.visibility = '';
+  }
+});
+
+toTypeFromBL.addEventListener('click', ()=> showTab('type'));
+
+// ===== Typing (Memory) =====
+const pType = document.getElementById('pType');
+const ruType = document.getElementById('ruType');
+const ansType = document.getElementById('ansType');
+const fbType = document.getElementById('fbType');
+const revType = document.getElementById('revType');
+const nextType = document.getElementById('nextType');
+const checkTypeBtn = document.getElementById('checkType');
+const skipTypeBtn  = document.getElementById('skipType');
+const speakHint = document.getElementById('speakHint');
+const repeatSel = document.getElementById('repeatSel');
+const starTYPE = document.getElementById('starTYPE');
+const totTYPE  = document.getElementById('totTYPE');
+const mistakesTYPE = document.getElementById('mistakesTYPE');
+const mistTitleTYPE = document.getElementById('mistTitleTYPE');
+let lock=false, timer=null;
+
+let TYPE = {
+  started:false,
+  queue:[],
+  current:null,
+  baseTotal:0,
+  streak:{},
+  completed:new Set(),
+  mistakesSet:new Set(),
+  start(data=DATA){
+    this.started = true;
+    this.queue   = shuffle(data.slice());
+    this.current = null;
+    this.baseTotal  = data.length;
+    this.streak = {};
+    this.completed = new Set();
+    this.mistakesSet = new Set();
+    starTYPE.textContent = 0;
+    totTYPE.textContent  = this.baseTotal;
+    this.render();
+  },
+  render(){
+    clearTimeout(timer); timer=null;
+    nextType.disabled=true;
+    fbType.textContent="Пишите слово по-английски. Регистр не важен.";
+    revType.style.display='none';
+    ansType.value=""; ansType.disabled=false;
+    lock=false; checkTypeBtn.disabled=false; skipTypeBtn.disabled=false;
+    if(this.queue.length===0){
+      document.getElementById('cQ1').textContent   = `ENG→RUS: ${QUIZ1.right}/${QUIZ1.order.length||DATA.length}`;
+      document.getElementById('cQ2').textContent   = `RUS→ENG: ${QUIZ2.right}/${QUIZ2.order.length||DATA.length}`;
+      document.getElementById('cSP').textContent   = `Правописание: ${SPELL.right}/${SPELL.order.length||DATA.length}`;
+      document.getElementById('cBL').textContent   = `Собери слово: ${BUILD.right}/${BUILD.order.length||DATA.length}`;
+      document.getElementById('cType').textContent = `Память: ${this.completed.size}/${this.baseTotal}`;
+      const acc = this.baseTotal ? (this.completed.size/this.baseTotal) : 1;
+      document.getElementById('cStars').textContent = acc>0.95? "⭐⭐⭐⭐⭐" :
+                                                     acc>0.8 ? "⭐⭐⭐⭐"  :
+                                                     acc>0.6 ? "⭐⭐⭐"   :
+                                                     acc>0.4 ? "⭐⭐"    : "⭐";
+      const wrongCount = this.mistakesSet.size;
+      document.getElementById('sum').textContent = wrongCount>0
+        ? "Были ошибки — потренируйтесь ещё раз!"
+        : "Без ошибок! Супер!";
+      const list = Array.from(this.mistakesSet).map(en => {
+        const w = DATA.find(x=>x.en===en);
+        return `<li>${w.en} — ${w.ru}</li>`;
+      });
+      mistakesTYPE.innerHTML = wrongCount? list.join("") : "<li>Ошибок не было 🎉</li>";
+      mistTitleTYPE.textContent = `Слова с ошибками ${wrongCount}/${this.baseTotal}:`;
+      showTab('result');
+      this.started=false;
+      document.getElementById('again').onclick = ()=>{
+        QUIZ1.started=false;
+        QUIZ2.started=false;
+        SPELL.started=false;
+        BUILD.started=false;
+        TYPE.started=false;
+        showTab('cards');
+      };
+      document.getElementById('againTypeWrong').onclick = ()=>{
+        if(wrongCount){
+          const wrongWords = DATA.filter(w => this.mistakesSet.has(w.en));
+          TYPE.start(wrongWords);
+          showTab('type');
+        }
+      };
+      return;
+    }
+    this.current = this.queue.shift();
+    pType.textContent = `${this.completed.size+1}/${this.baseTotal}`;
+    ruType.textContent = this.current.ru;
+    speakHint.onclick = ()=> speak(this.current.en);
+    ansType.focus();
+  },
+  handleResult(isCorrect){
+    const w = this.current;
+    const need = parseInt(repeatSel.value,10);
+    const en = w.en;
+    if(isCorrect){
+      speak(w.en);
+      fbType.innerHTML = '<span class="ok">Верно!</span>';
+      setTimeout(()=>ok(), 250);
+      const prev = this.streak[en]||0;
+      const now  = prev+1;
+      this.streak[en]=now;
+      if(need===0){
+        this.completed.add(en);
+      }else{
+        if(now>=need){
+          this.completed.add(en);
+        }else{
+          this.queue.push(w);
+        }
+      }
+    }else{
+      bad();
+      this.mistakesSet.add(en);
+      this.streak[en]=0;
+      this.queue.push(w);
+      setTimeout(()=>speak(w.en), 150);
+      fbType.innerHTML = '<span class="err">Ошибка.</span>';
+      revType.style.display='block';
+      revType.textContent = "Правильно: " + w.en;
+    }
+    starTYPE.textContent = this.completed.size;
+    revType.style.display='block';
+    revType.textContent = w.en;
+    ansType.disabled=true; lock=true;
+    nextType.disabled=false; checkTypeBtn.disabled=true; skipTypeBtn.disabled=true;
+    timer = setTimeout(()=> this.next(), isCorrect ? 2000 : 5000);
+  },
+  next(){
+    clearTimeout(timer); timer=null;
+    this.render();
+  }
+};
+
+function checkType(){
+  if(lock) return;
+  const cur = TYPE.current;
+  const user = ansType.value;
+  const isOk = eqCaseInsensitive(user, cur.en);
+  TYPE.handleResult(isOk);
+}
+function skipType(){
+  if(lock) return;
+  TYPE.handleResult(false);
+}
+checkTypeBtn.addEventListener('click', checkType);
+skipTypeBtn.addEventListener('click', skipType);
+nextType.addEventListener('click', ()=> TYPE.next());
+
+// ===== Enter shortcuts =====
+document.addEventListener('keydown', (e)=>{
+  const isType = sections.type.style.display==='block';
+  const isQ1 = sections.quiz1.style.display==='block';
+  const isQ2 = sections.quiz2.style.display==='block';
+  const isSP = sections.spell.style.display==='block';
+  const isBL = sections.build.style.display==='block';
+  if(isType && e.key==='Enter'){
+    if(document.activeElement===ansType){ e.preventDefault(); checkType(); }
+    else if(!nextType.disabled){ e.preventDefault(); TYPE.next(); }
+  }
+  if(isQ1 && e.key==='Enter' && !nextQ1.disabled){ e.preventDefault(); QUIZ1.next(); }
+  if(isQ2 && e.key==='Enter' && !nextQ2.disabled){ e.preventDefault(); QUIZ2.next(); }
+  if(isSP && e.key==='Enter' && !nextSP.disabled){ e.preventDefault(); SPELL.next(); }
+  if(isBL && e.key==='Enter' && !checkBL.disabled){ e.preventDefault(); BUILD.check(); }
+});
+
+// Init
+(function init(){
+  renderCards();
+  document.getElementById('toQuiz1').addEventListener('click', ()=> showTab('quiz1'));
+})();
+</script>
+</body>
+</html>
